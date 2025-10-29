@@ -1,0 +1,313 @@
+openapi: 3.0.3
+info:
+  title: User Service API
+  description: API for managing users (Volunteer, NGO, Corporate, Admin)
+  version: 1.0.2
+
+servers:
+  - url: http://localhost:8080/api
+    description: Local Development
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      description: Register a new user (Volunteer, NGO, Corporate, or Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBase'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Authenticate user
+      description: Authenticate user and issue JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get user profile
+      description: Retrieve user details by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User profile details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBase'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags: [Users]
+      summary: Update user profile
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBase'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags: [Users]
+      summary: Delete user
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UserBase:
+      type: object
+      required: [email, password, role, name]
+      discriminator:
+        propertyName: role
+        mapping:
+          VOLUNTEER: '#/components/schemas/VolunteerProfile'
+          NGO: '#/components/schemas/NGOProfile'
+          CORPORATE: '#/components/schemas/CorporateProfile'
+          ADMIN: '#/components/schemas/AdminProfile'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          writeOnly: true
+        role:
+          type: string
+          enum: [VOLUNTEER, NGO, CORPORATE, ADMIN]
+        name:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+
+    VolunteerProfile:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            dob:
+              type: string
+              format: date
+            gender:
+              type: string
+            skills:
+              type: array
+              items:
+                type: string
+            interests:
+              type: array
+              items:
+                type: string
+            availability:
+              type: string
+            languages:
+              type: array
+              items:
+                type: string
+
+    NGOProfile:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            registrationNumber:
+              type: string
+            foundedYear:
+              type: integer
+            sector:
+              type: string
+            websiteUrl:
+              type: string
+            missionStatement:
+              type: string
+            verificationStatus:
+              type: string
+              enum: [PENDING, VERIFIED, REJECTED]
+
+    CorporateProfile:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            registrationNumber:
+              type: string
+            industry:
+              type: string
+            csrFocusAreas:
+              type: array
+              items:
+                type: string
+            budgetAllocated:
+              type: number
+              format: double
+            websiteUrl:
+              type: string
+
+    AdminProfile:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            employeeId:
+              type: string
+            permissions:
+              type: array
+              items:
+                type: string
+            assignedRegion:
+              type: string
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        expiresIn:
+          type: integer
+          example: 3600
+        role:
+          type: string
+          enum: [VOLUNTEER, NGO, CORPORATE, ADMIN]
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        role:
+          type: string
+        message:
+          type: string
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
