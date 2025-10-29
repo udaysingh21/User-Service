@@ -1,0 +1,16 @@
+.openapi-generator-ignore
+README.md
+pom.xml
+src/main/java/com/vrms/user/api/ApiUtil.java
+src/main/java/com/vrms/user/api/AuthApi.java
+src/main/java/com/vrms/user/api/UsersApi.java
+src/main/java/com/vrms/user/model/AdminProfile.java
+src/main/java/com/vrms/user/model/CorporateProfile.java
+src/main/java/com/vrms/user/model/ErrorResponse.java
+src/main/java/com/vrms/user/model/LoginRequest.java
+src/main/java/com/vrms/user/model/LoginResponse.java
+src/main/java/com/vrms/user/model/MessageResponse.java
+src/main/java/com/vrms/user/model/NGOProfile.java
+src/main/java/com/vrms/user/model/UserBase.java
+src/main/java/com/vrms/user/model/UserResponse.java
+src/main/java/com/vrms/user/model/VolunteerProfile.java

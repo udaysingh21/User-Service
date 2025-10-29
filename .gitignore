@@ -1,0 +1,93 @@
+# =========================================
+# Java / Spring Boot .gitignore
+# =========================================
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+logs/
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Virtual machine crash logs
+hs_err_pid*
+
+# =========================================
+# Build and dependency directories
+# =========================================
+target/
+build/
+out/
+.gradle/
+.mvn/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Maven / Gradle wrapper
+!.mvn/wrapper/maven-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# =========================================
+# IDE / Editor specific files
+# =========================================
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# =========================================
+# OS-generated files
+# =========================================
+.DS_Store
+Thumbs.db
+
+# =========================================
+# Environment and secrets
+# =========================================
+.env
+.env.*
+*.key
+*.pem
+*.crt
+
+# =========================================
+# Testing & reports
+# =========================================
+*.tmp
+*.bak
+*.swp
+*.swo
+*.orig
+reports/
+coverage/
