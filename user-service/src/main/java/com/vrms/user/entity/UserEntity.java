@@ -1,5 +1,6 @@
 package com.vrms.user.entity;
 
+import com.vrms.user.model.UserBase;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -40,4 +41,5 @@ public class UserEntity {
         DiscriminatorValue dv = this.getClass().getAnnotation(DiscriminatorValue.class);
         return (dv != null) ? dv.value() : "UNKNOWN";
     }
+
 }

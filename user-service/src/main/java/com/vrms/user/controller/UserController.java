@@ -94,6 +94,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @Slf4j
 @RestController
 @RequestMapping("/api/users")
@@ -148,8 +149,8 @@ public class UserController {
         }
 
         // Generate Access & Refresh Tokens
-        String accessToken = jwtService.generateAccessToken(user.getEmail());
-        String refreshToken = jwtService.generateRefreshToken(user.getEmail());
+        String accessToken = jwtService.generateAccessToken(user.getEmail(), user.getRoleType());
+        String refreshToken = jwtService.generateRefreshToken(user.getEmail(), user.getRoleType());
 
         log.info("User {} logged in successfully. Tokens generated.", request.getEmail());
 
