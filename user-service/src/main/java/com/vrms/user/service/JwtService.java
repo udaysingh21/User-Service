@@ -1,28 +1,28 @@
 package com.vrms.user.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
 
-
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "thisisaverylongsecretkeyforjwtgeneration1234567890";
-    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private final Key key;
+
+    public JwtService(@Value("${JWT_SECRET}") String secret) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String generateAccessToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -31,12 +31,11 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // 7 days
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
-
 
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
@@ -72,7 +71,7 @@ public class JwtService {
             throw new RuntimeException("Invalid refresh token");
         }
         String email = extractUsername(refreshToken);
-        String role = extractRole(refreshToken); // ✅ Keep role consistent
+        String role = extractRole(refreshToken);
         return generateAccessToken(email, role);
     }
 }
