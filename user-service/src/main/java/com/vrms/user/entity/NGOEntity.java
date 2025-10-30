@@ -28,4 +28,5 @@ public class NGOEntity extends UserEntity {
     private String websiteUrl;
 
     private String missionStatement; // optional
+    private String verificationStatus;
 }
