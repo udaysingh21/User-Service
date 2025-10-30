@@ -28,10 +28,12 @@ public class UserEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String phone;
+
     private String address;
 
-    // 🔹 Hibernate automatically manages the "role" column via @DiscriminatorValue on subclasses
+    // Hibernate automatically manages the "role" column via @DiscriminatorValue on subclasses
 
     @Transient
     public String getRoleType() {

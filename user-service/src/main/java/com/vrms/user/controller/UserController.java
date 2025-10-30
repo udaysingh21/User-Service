@@ -106,7 +106,7 @@ public class UserController {
     private final JwtService jwtService;
 
     // =====================================================
-    // 🔹 REGISTRATION ENDPOINTS
+    //  REGISTRATION ENDPOINTS
     // =====================================================
 
     @PostMapping("/register/volunteer")
@@ -127,14 +127,9 @@ public class UserController {
         return userService.registerCorporate(dto);
     }
 
-    @PostMapping("/register/admin")
-    public AdminEntity registerAdmin(@RequestBody AdminDTO dto) {
-        log.info("Registering new Admin: {}", dto.getEmail());
-        return userService.registerAdmin(dto);
-    }
 
     // =====================================================
-    // 🔐 LOGIN ENDPOINT (with JWT)
+    // LOGIN ENDPOINT (with JWT)
     // =====================================================
 
     @PostMapping("/login")
@@ -152,7 +147,7 @@ public class UserController {
             throw new RuntimeException("Invalid password");
         }
 
-        // ✅ Generate Access & Refresh Tokens
+        // Generate Access & Refresh Tokens
         String accessToken = jwtService.generateAccessToken(user.getEmail());
         String refreshToken = jwtService.generateRefreshToken(user.getEmail());
 
@@ -165,9 +160,6 @@ public class UserController {
         return response;
     }
 
-    // =====================================================
-    // ♻️ REFRESH ACCESS TOKEN ENDPOINT
-    // =====================================================
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshAccessToken(@RequestBody Map<String, String> request) {

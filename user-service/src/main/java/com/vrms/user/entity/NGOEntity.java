@@ -1,9 +1,9 @@
 package com.vrms.user.entity;
 
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import lombok.*;
 import jakarta.persistence.DiscriminatorValue;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Getter
@@ -14,10 +14,18 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @DiscriminatorValue("NGO")
 public class NGOEntity extends UserEntity {
+
+    @Column(nullable = false)
     private String registrationNumber;
+
+    @Column(nullable = false)
     private Integer foundedYear;
+
+    @Column(nullable = false)
     private String sector;
+
+    @Column(nullable = false)
     private String websiteUrl;
-    private String missionStatement;
-    private String verificationStatus;
+
+    private String missionStatement; // optional
 }

@@ -1,5 +1,6 @@
 package com.vrms.user.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.DiscriminatorValue;
@@ -16,7 +17,11 @@ import java.util.List;
 @SuperBuilder
 @DiscriminatorValue("CORPORATE")
 public class CorporateEntity extends UserEntity {
+
+    @Column(nullable = false)
     private String registrationNumber;
+
+    @Column(nullable = false)
     private String industry;
 
     @ElementCollection
